@@ -1,0 +1,17 @@
+# Compiled class files
+*.class
+
+# Logs
+*.log
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.suo
+*.user
+
+# Build output
+bin/
+out/
+build/
