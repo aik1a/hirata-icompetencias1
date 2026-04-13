@@ -15,3 +15,9 @@
 bin/
 out/
 build/
+target/
+
+# Node / frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
