@@ -10,6 +10,7 @@ export default function Kilometraje() {
   const [form, setForm] = useState(EMPTY)
   const [saving, setSaving] = useState(false)
   const [feedback, setFeedback] = useState(null) // { alerta, total, patente }
+  const [error, setError] = useState(null)
   const [loading, setLoading] = useState(true)
 
   const load = () => {
@@ -25,15 +26,17 @@ export default function Kilometraje() {
     if (!form.patente || !form.kilometraje) return
     setSaving(true)
     setFeedback(null)
+    setError(null)
     try {
-      const res = await api.createKilometraje({
+      const data = await api.createKilometraje({
         patente: form.patente,
         kilometraje: parseInt(form.kilometraje),
       })
-      const data = await res.json()
       setFeedback({ ...data, patente: form.patente })
       setForm(EMPTY)
       load()
+    } catch (err) {
+      setError(err.message)
     } finally {
       setSaving(false)
     }
@@ -100,6 +103,12 @@ export default function Kilometraje() {
                 {saving ? 'Registrando...' : 'Registrar Kilometraje'}
               </button>
             </form>
+
+            {error && (
+              <div className="mt-4 p-3 rounded-lg border bg-red-900/30 border-red-500/30 text-red-300 text-sm">
+                {error}
+              </div>
+            )}
 
             {/* Feedback post-registro */}
             {feedback && (

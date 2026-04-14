@@ -12,6 +12,7 @@ export default function Camiones() {
   const [modal, setModal] = useState({ open: false, editing: null })
   const [form, setForm] = useState(EMPTY)
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState(null)
 
   const load = () => {
     setLoading(true)
@@ -24,6 +25,7 @@ export default function Camiones() {
 
   const openAdd = () => {
     setForm(EMPTY)
+    setError(null)
     setModal({ open: true, editing: null })
   }
 
@@ -35,6 +37,7 @@ export default function Camiones() {
       anio:        String(c.anio),
       conductorId: c.conductorId != null ? String(c.conductorId) : '',
     })
+    setError(null)
     setModal({ open: true, editing: c })
   }
 
@@ -43,6 +46,7 @@ export default function Camiones() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSaving(true)
+    setError(null)
     try {
       const payload = { ...form, anio: parseInt(form.anio) }
       if (modal.editing) {
@@ -52,6 +56,8 @@ export default function Camiones() {
       }
       closeModal()
       load()
+    } catch (err) {
+      setError(err.message)
     } finally {
       setSaving(false)
     }
@@ -237,6 +243,11 @@ export default function Camiones() {
             </select>
           </div>
 
+          {error && (
+            <p className="text-sm text-red-400 bg-red-900/20 border border-red-500/30 rounded-lg px-3 py-2">
+              {error}
+            </p>
+          )}
           <div className="flex justify-end gap-3 pt-2">
             <button
               type="button"

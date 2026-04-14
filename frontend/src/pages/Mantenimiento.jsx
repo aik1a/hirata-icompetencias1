@@ -21,6 +21,7 @@ export default function Mantenimiento() {
   const [modal, setModal] = useState({ open: false, editing: null })
   const [form, setForm] = useState(EMPTY)
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState(null)
 
   const load = () => {
     setLoading(true)
@@ -33,6 +34,7 @@ export default function Mantenimiento() {
 
   const openAdd = () => {
     setForm(EMPTY)
+    setError(null)
     setModal({ open: true, editing: null })
   }
 
@@ -43,6 +45,7 @@ export default function Mantenimiento() {
       descripcion: r.descripcion,
       fecha:       r.fecha,
     })
+    setError(null)
     setModal({ open: true, editing: r })
   }
 
@@ -51,6 +54,7 @@ export default function Mantenimiento() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSaving(true)
+    setError(null)
     try {
       if (modal.editing) {
         await api.updateMantenimiento(modal.editing.id, form)
@@ -59,6 +63,8 @@ export default function Mantenimiento() {
       }
       closeModal()
       load()
+    } catch (err) {
+      setError(err.message)
     } finally {
       setSaving(false)
     }
@@ -228,6 +234,11 @@ export default function Mantenimiento() {
             />
           </div>
 
+          {error && (
+            <p className="text-sm text-red-400 bg-red-900/20 border border-red-500/30 rounded-lg px-3 py-2">
+              {error}
+            </p>
+          )}
           <div className="flex justify-end gap-3 pt-2">
             <button
               type="button"
